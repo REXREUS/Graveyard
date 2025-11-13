@@ -58,7 +58,7 @@ curl -fsSL https://raw.githubusercontent.com/rexreus/Graveyard/main/setup/instal
 
 **Windows (PowerShell):**
 ```powershell
-irm https://raw.githubusercontent.com/REXREUS/Graveyard/main/setup/install.bat | iex
+irm https://raw.githubusercontent.com/REXREUS/Graveyard/main/setup/install.ps1 | iex
 ```
 
 ### Manual Download
