@@ -51,7 +51,7 @@ try {
     Write-Host "Download complete."
 }
 catch {
-    [cite_start]Write-Error "Download failed: $_" [cite: 2] # Simulating source 2 logic
+    Write-Error "Download failed: $_"
     exit 1
 }
 
@@ -93,7 +93,7 @@ catch {
 }
 
 Write-Host ""
-[cite_start]Write-Host "Installation complete!" [cite: 4]
+Write-Host "Installation complete!"
 Write-Host "Graveyard installed to: $InstallDir"
 Write-Host ""
 Write-Host "Run 'graveyard' to start the application."
