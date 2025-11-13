@@ -1,0 +1,21 @@
+# Binaries
+bin/
+*.exe
+graveyard
+graveyard-*
+
+# Environment
+.env
+
+# Go
+*.log
+*.out
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+graveyard.log
