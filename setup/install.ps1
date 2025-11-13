@@ -1,12 +1,4 @@
-<#
-.SYNOPSIS
-    Graveyard Installer Script for Windows (PowerShell)
-.DESCRIPTION
-    This script downloads and installs the latest release of Graveyard 
-    from GitHub and adds it to the user's PATH.
-#>
 
-# --- Configuration ---
 $Repo = "rexreus/Graveyard"
 $InstallDir = "$env:LOCALAPPDATA\Graveyard"
 $BinaryName = "graveyard.exe"
