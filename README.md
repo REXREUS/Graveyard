@@ -133,13 +133,13 @@ VIRUSTOTAL_API_KEY=your_virustotal_api_key_here
 <div align="center">
 
 ### Main Interface
-![Main Interface](docs/assets/screenshot-main.png)
+![Main Interface](https://i.imgur.com/QkpTJ3e.png)
 
 ### AI Analysis
-![AI Analysis](docs/assets/screenshot-ai.png)
+![AI Analysis](https://i.imgur.com/bIwwqKI.png)
 
 ### VirusTotal Scan
-![VirusTotal Scan](docs/assets/screenshot-virustotal.png)
+![VirusTotal Scan](https://i.imgur.com/aUt7GG0.png)
 
 </div>
 
