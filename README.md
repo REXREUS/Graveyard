@@ -254,12 +254,12 @@ See [SECURITY.md](docs/SECURITY.md) for detailed information.
 
 **Linux / macOS:**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/REXREUS/Graveyard/main/setup/uninstall.sh | bash
+ curl -fsSL https://raw.githubusercontent.com/REXREUS/Graveyard/main/setup/uninstall.sh |bash
 ```
 
 **Windows:**
-```cmd
-setup\uninstall.bat
+```ps1
+irm https://raw.githubusercontent.com/REXREUS/Graveyard/main/setup/uninstall.ps1 | iex
 ```
 
 ## 🤝 Contributing
