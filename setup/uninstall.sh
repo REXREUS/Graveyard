@@ -1,55 +1,100 @@
 #!/bin/bash
+#
+# Graveyard Uninstaller Script - Enterprise Ready
+# Removes the Graveyard application binary, configuration, and logs.
+#
+# Prerequisites: Must be run with appropriate permissions for /usr/local/bin access.
 
-# Graveyard Uninstaller Script for Linux/Mac
-# This script removes Graveyard from your system
+# Set strict shell options for security and error handling
+set -euo pipefail
 
-set -e
-
+# --- Configuration Variables ---
 INSTALL_DIR="/usr/local/bin"
 BINARY_NAME="graveyard"
 CONFIG_DIR="$HOME/.config/graveyard"
 LOG_FILE="$HOME/graveyard.log"
 
-echo "Uninstalling Graveyard..."
+echo "=========================================="
+echo "💀 Starting Graveyard Uninstallation 💀"
+echo "=========================================="
 
-# Remove binary
-if [ -f "$INSTALL_DIR/$BINARY_NAME" ]; then
-    echo "Removing binary from $INSTALL_DIR..."
-    if [ -w "$INSTALL_DIR" ]; then
-        rm "$INSTALL_DIR/$BINARY_NAME"
+# --- Function Definitions ---
+
+# Function to safely remove the binary, using sudo only if necessary
+remove_binary() {
+    local target_path="$INSTALL_DIR/$BINARY_NAME"
+    echo -n "Checking binary at $target_path... "
+
+    if [[ -f "$target_path" ]]; then
+        if [[ -w "$INSTALL_DIR" ]]; then
+            # User has write access, no sudo needed
+            rm -v "$target_path" 2>/dev/null
+        else
+            # Sudo is required for cleanup in a system directory
+            echo "Requires root permissions to remove."
+            # Use 'rm -f' with sudo to suppress non-fatal warnings
+            if sudo rm -f "$target_path"; then
+                echo "✓ Binary removed successfully (using sudo)."
+            else
+                echo "❌ Failed to remove binary (sudo failed)." >&2
+                return 1
+            fi
+        fi
+        echo "✓ Binary removed."
     else
-        sudo rm "$INSTALL_DIR/$BINARY_NAME"
+        echo "Binary not found. Skipping."
     fi
-    echo "✓ Binary removed"
-else
-    echo "Binary not found at $INSTALL_DIR/$BINARY_NAME"
-fi
+}
 
-# Ask about config and log files
-echo ""
-read -p "Do you want to remove configuration and log files? (y/N): " -n 1 -r
-echo ""
-
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    # Remove config directory
-    if [ -d "$CONFIG_DIR" ]; then
-        echo "Removing config directory..."
-        rm -rf "$CONFIG_DIR"
-        echo "✓ Config directory removed"
-    fi
-    
-    # Remove log file
-if [ -f "$LOG_FILE" ]; then
-        echo "Removing log file..."
-        rm "$LOG_FILE"
-        echo "✓ Log file removed"
-    fi
-    
-    echo "" # <--- CORRECTED LINE
-    echo "✓ Graveyard completely removed from your system"
-else
+# Function to remove configuration and log files after user confirmation
+cleanup_user_data() {
     echo ""
-    echo "✓ Graveyard binary removed (config and logs kept)"
-    echo "Config location: $CONFIG_DIR"
-    echo "Log location: $LOG_FILE"
-fi
+    read -r -p "Do you want to remove configuration ($CONFIG_DIR) and log files ($LOG_FILE)? (y/N): " REPLY
+
+    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+        echo "Proceeding with user data cleanup..."
+
+        # Remove config directory
+        if [[ -d "$CONFIG_DIR" ]]; then
+            echo -n "Removing config directory... "
+            if rm -rf "$CONFIG_DIR"; then
+                echo "✓ Config directory removed."
+            else
+                echo "❌ Failed to remove config directory." >&2
+            fi
+        else
+            echo "Config directory not found. Skipping."
+        fi
+
+        # Remove log file
+        if [[ -f "$LOG_FILE" ]]; then
+            echo -n "Removing log file... "
+            if rm "$LOG_FILE"; then
+                echo "✓ Log file removed."
+            else
+                echo "❌ Failed to remove log file." >&2
+            fi
+        else
+            echo "Log file not found. Skipping."
+        fi
+
+        echo ""
+        echo "=========================================="
+        echo "✅ Graveyard completely removed from your system"
+        echo "=========================================="
+    else
+        echo ""
+        echo "=========================================="
+        echo "⚠️ Graveyard binary removed (config and logs kept)"
+        echo "Config location: $CONFIG_DIR"
+        echo "Log location: $LOG_FILE"
+        echo "=========================================="
+    fi
+}
+
+# --- Main Execution ---
+
+remove_binary
+cleanup_user_data
+
+exit 0
