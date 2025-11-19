@@ -282,7 +282,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you find Graveyard useful, please consider giving it a star! ⭐
 
-[![Star History Chart](https://api.star-history.com/svg?repos=REXREUS/Graveyard&type=Date)](https://star-history.com/#REXREUS/Graveyard&Date)
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=REXREUS/Graveyard&type=date&legend=bottom-right)](https://www.star-history.com/#REXREUS/Graveyard&type=date&legend=bottom-right)
 
 ## 💬 Support
 
