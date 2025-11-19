@@ -39,13 +39,13 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     fi
     
     # Remove log file
-    if [ -f "$LOG_FILE" ]; then
+if [ -f "$LOG_FILE" ]; then
         echo "Removing log file..."
         rm "$LOG_FILE"
         echo "✓ Log file removed"
     fi
     
-    echo ""
+    echo "" # <--- CORRECTED LINE
     echo "✓ Graveyard completely removed from your system"
 else
     echo ""
