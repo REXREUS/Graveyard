@@ -2,7 +2,7 @@
 
 ## Overview
 
-Process Monitor CLI features a three-panel terminal UI designed for efficient, simultaneous display of system metrics, security analysis, and process data.
+Graveyard features a three-panel terminal UI designed for efficient, simultaneous display of system metrics, security analysis, and process data.
 
 ## Layout Structure
 
