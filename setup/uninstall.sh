@@ -1,11 +1,14 @@
 #!/bin/bash
 #
-# Graveyard Uninstaller Script - Enterprise Ready
-# Removes the Graveyard application binary, configuration, and logs.
+# Graveyard Uninstaller Script - Enterprise Grade
+# Removes the Graveyard application binary, configuration, and logs completely.
 #
-# Prerequisites: Must be run with appropriate permissions for /usr/local/bin access.
+# Execution Prerequisites: The user must have permissions to run 'sudo' if the binary exists in a system directory.
 
-# Set strict shell options for security and error handling
+# --- Strict Shell Options for Security and Reliability ---
+# -e: Exit immediately if a command exits with a non-zero status.
+# -u: Treat unset variables as an error.
+# -o pipefail: The pipeline's exit status is the rightmost non-zero exit status, or zero if all commands exit successfully.
 set -euo pipefail
 
 # --- Configuration Variables ---
@@ -14,53 +17,58 @@ BINARY_NAME="graveyard"
 CONFIG_DIR="$HOME/.config/graveyard"
 LOG_FILE="$HOME/graveyard.log"
 
+# --- Main Program Start ---
 echo "=========================================="
-echo "💀 Starting Graveyard Uninstallation 💀"
+echo "💀 Starting Graveyard Uninstallation Process 💀"
 echo "=========================================="
 
 # --- Function Definitions ---
 
-# Function to safely remove the binary, using sudo only if necessary
+# Safely remove the binary, checking permissions before escalating with sudo.
 remove_binary() {
     local target_path="$INSTALL_DIR/$BINARY_NAME"
-    echo -n "Checking binary at $target_path... "
+    echo -n "Checking for binary at $target_path... "
 
     if [[ -f "$target_path" ]]; then
+        echo "Binary found."
+        
+        # Check if user has direct write access to the installation directory
         if [[ -w "$INSTALL_DIR" ]]; then
-            # User has write access, no sudo needed
-            rm -v "$target_path" 2>/dev/null
+            echo "Removing binary without sudo..."
+            rm -v "$target_path"
         else
-            # Sudo is required for cleanup in a system directory
-            echo "Requires root permissions to remove."
-            # Use 'rm -f' with sudo to suppress non-fatal warnings
+            echo "Requires sudo permission to remove binary from system directory."
+            # Use sudo to remove the binary, ensuring user is prompted for password only when needed
             if sudo rm -f "$target_path"; then
                 echo "✓ Binary removed successfully (using sudo)."
             else
-                echo "❌ Failed to remove binary (sudo failed)." >&2
+                # This branch should be reached if sudo fails or user cancels
+                echo "❌ ERROR: Failed to remove binary. Check permissions or user cancellation." >&2
                 return 1
             fi
         fi
-        echo "✓ Binary removed."
     else
-        echo "Binary not found. Skipping."
+        echo "Binary not found. Skipping removal."
     fi
 }
 
-# Function to remove configuration and log files after user confirmation
+# Handles the removal of configuration and log files after user confirmation.
 cleanup_user_data() {
     echo ""
-    read -r -p "Do you want to remove configuration ($CONFIG_DIR) and log files ($LOG_FILE)? (y/N): " REPLY
+    # Use -r for raw input, essential for security and correct handling
+    read -r -p "Do you want to remove configuration ($CONFIG_DIR) and log files ($LOG_FILE)? (Y/n): " REPLY
 
+    # Default to NO if REPLY is empty or check for explicit 'y' or 'Y'
     if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-        echo "Proceeding with user data cleanup..."
+        echo "--- Proceeding with user data cleanup ---"
 
         # Remove config directory
         if [[ -d "$CONFIG_DIR" ]]; then
-            echo -n "Removing config directory... "
+            echo -n "Removing config directory ($CONFIG_DIR)... "
             if rm -rf "$CONFIG_DIR"; then
                 echo "✓ Config directory removed."
             else
-                echo "❌ Failed to remove config directory." >&2
+                echo "❌ Failed to remove config directory. Manual cleanup may be required." >&2
             fi
         else
             echo "Config directory not found. Skipping."
@@ -68,11 +76,11 @@ cleanup_user_data() {
 
         # Remove log file
         if [[ -f "$LOG_FILE" ]]; then
-            echo -n "Removing log file... "
+            echo -n "Removing log file ($LOG_FILE)... "
             if rm "$LOG_FILE"; then
                 echo "✓ Log file removed."
             else
-                echo "❌ Failed to remove log file." >&2
+                echo "❌ Failed to remove log file. Manual cleanup may be required." >&2
             fi
         else
             echo "Log file not found. Skipping."
@@ -80,20 +88,19 @@ cleanup_user_data() {
 
         echo ""
         echo "=========================================="
-        echo "✅ Graveyard completely removed from your system"
+        echo "✅ Graveyard completely removed from your system."
         echo "=========================================="
     else
         echo ""
         echo "=========================================="
-        echo "⚠️ Graveyard binary removed (config and logs kept)"
+        echo "⚠️ Graveyard binary removal completed (config and logs kept)."
         echo "Config location: $CONFIG_DIR"
         echo "Log location: $LOG_FILE"
         echo "=========================================="
     fi
 }
 
-# --- Main Execution ---
-
+# --- Main Execution Flow ---
 remove_binary
 cleanup_user_data
 
